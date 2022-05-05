@@ -7,4 +7,8 @@ public class Application implements Expression {
 		this.left = left;
         this.right = right;
 	}
+
+    public String toString() {
+        return "(" + left + " " + right + ")";
+    }
 }

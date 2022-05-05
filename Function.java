@@ -7,5 +7,7 @@ public class Function implements Expression {
 		this.expression = expression;
         this.variable = variable;
 	}
-    
+    public String toString() {
+        return "(" + expression + " " + variable + ")";
+    }
 }
