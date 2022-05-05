@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,14 +24,28 @@ public class Lexer {
 		
 		// This next line is definitely incorrect!
 		while (st.hasMoreTokens()) {
+			String t = st.nextToken();
+			if (t.contains('.') || t.contains('\\') || t.contains('(') || t.contains(')'))
 			tokens.add(st.nextToken());
 		}
 
-		return tokens;
+		char[] vals = {'(', ')', '.', '\\'};
+		for (int i = 0; i < tokens.size(); i++) {
+			for (int c = 0; c < tokens.get(i).length(); c++) {
+				int index = Arrays.binarySearch(vals, tokens.get(i).charAt(c));
+				while (index != -1) {
+					if (index == 0) {
+						tokens.add(i, Character.toString(tokens.get(i).charAt(c)));
+						tokens.add(i+1, tokens.get(i).substring(1));
+					}
+					else if (index == tokens.get(i).)
 
-		// for (int i = 0; i < tokens.size(); i++) {
-		// 	if (tokens.get(i).equals
-		// }
+					index = Arrays.binarySearch(vals, tokens.get(i).charAt(c));
+				}
+			}
+		}
+
+		for (int i = 0;)
 	}
 
 

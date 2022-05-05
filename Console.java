@@ -19,7 +19,7 @@ public class Console {
 		while (! input.equalsIgnoreCase("exit")) {
 			
 			ArrayList<String> tokens = lexer.tokenize(input);
-			// System.out.println(tokens);
+			System.out.println(tokens);
 
 			String output = "";
 			
