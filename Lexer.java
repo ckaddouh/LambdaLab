@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +19,13 @@ public class Lexer {
 	public ArrayList<String> tokenize(String input) {
 		ArrayList<String> tokens = new ArrayList<String>();
 
+		StringTokenizer st = new StringTokenizer(input);
+		
 		// This next line is definitely incorrect!
+		while (st.hasMoreTokens()) {
+			tokens.add(st.nextToken());
+		}
+
 		tokens.add(input);
 
 		return tokens;
