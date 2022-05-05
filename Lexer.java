@@ -27,6 +27,10 @@ public class Lexer {
 		}
 
 		return tokens;
+
+		// for (int i = 0; i < tokens.size(); i++) {
+		// 	if (tokens.get(i).equals
+		// }
 	}
 
 
