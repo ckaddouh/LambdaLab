@@ -26,8 +26,6 @@ public class Lexer {
 			tokens.add(st.nextToken());
 		}
 
-		tokens.add(input);
-
 		return tokens;
 	}
 
