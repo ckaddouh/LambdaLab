@@ -26,9 +26,11 @@ public class Lexer {
 			tokens.add(st.nextToken());
 		}
 
-		tokens.add(input);
-
 		return tokens;
+
+		// for (int i = 0; i < tokens.size(); i++) {
+		// 	if (tokens.get(i).equals
+		// }
 	}
 
 
