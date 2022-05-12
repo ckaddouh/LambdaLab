@@ -19,33 +19,33 @@ public class Lexer {
 	 *
 	 */
 	public ArrayList<String> tokenize(String input) {
-		String[] vals = {"(", ")", ".", "\\"};
+
 		ArrayList<String> arr = new ArrayList<>();
 		
 		List<String> inputList = Arrays.asList(input.split(" "));
-
 		for (int w = 0; w < inputList.size(); w++) {
-			boolean valContains = false;
-			for (int i = 0; i < inputList.get(w).length(); i++) {
+			tokenizeHelp(inputList.get(w));
+		// 	boolean valContains = false;
+		// 	for (int i = 0; i < inputList.get(w).length(); i++) {
 					
-					if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
-						valContains = true;
-						arr.add(inputList.get(w).substring(0,i));
-						arr.add(inputList.get(w).substring(i,i+1));
-						//if (i+1 < inputList.get(w).length()) {
-							inputList.set(w, inputList.get(w).substring(i+1));
-						//}
-						// else {
-						// 	arr.addAll(tokenize(input.substring(i+1)));						
-						// }
+		// 			if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
+		// 				valContains = true;
+		// 				arr.add(inputList.get(w).substring(0,i));
+		// 				arr.add(inputList.get(w).substring(i,i+1));
+		// 				//if (i+1 < inputList.get(w).length()) {
+		// 					inputList.set(w, inputList.get(w).substring(i+1));
+		// 				//}
+		// 				// else {
+		// 				// 	arr.addAll(tokenize(input.substring(i+1)));						
+		// 				// }
 						
-					}
+		// 			}
 					
 			}
-			if (!valContains) {
-				arr.add(inputList.get(w));
-			}
-		}
+		// 	if (!valContains) {
+		// 		arr.add(inputList.get(w));
+		// 	}
+		// }
 		return arr;
 
 		// String[] words = input.split(" ");
@@ -81,6 +81,20 @@ public class Lexer {
 		
 
 	}
+
+	public ArrayList<String> tokenizeHelp(String str){
+		String[] vals = {"(", ")", ".", "\\"};
+		ArrayList<String> ret = new ArrayList<>();
+		for (int i = 0; i < vals.length; i++){
+			if (str.contains(vals[i])){
+				ret.add(str.substring(0, // wherever vals is))
+			}
+
+		}
+		return ret;
+	}
+
+
 	
 
 }
