@@ -22,30 +22,34 @@ public class Lexer {
 		String[] vals = {"(", ")", ".", "\\"};
 		ArrayList<String> arr = new ArrayList<>();
 		
-		List<String> inputList = Arrays.asList(input.split(" "));
 
-		for (int w = 0; w < inputList.size(); w++) {
-			boolean valContains = false;
-			for (int i = 0; i < inputList.get(w).length(); i++) {
-					
-					if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
-						valContains = true;
-						arr.add(inputList.get(w).substring(0,i));
-						arr.add(inputList.get(w).substring(i,i+1));
-						//if (i+1 < inputList.get(w).length()) {
-							inputList.set(w, inputList.get(w).substring(i+1));
-						//}
-						// else {
-						// 	arr.addAll(tokenize(input.substring(i+1)));						
-						// }
-						
-					}
-					
+		int i = 0;
+		while (i < input.length()) {
+			//System.out.println(input);
+			if (input.substring(i,i+1).equals(" ")) {
+				arr.add(input.substring(0,i+1));
+				input = input.substring(i+1);
+				i = 0;
 			}
-			if (!valContains) {
-				arr.add(inputList.get(w));
+			else if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
+				arr.add(input.substring(0,i));
+				arr.add(input.substring(i,i+1));
+				input = input.substring(i+1);
+				i = 0;
+			}
+			i++;
+				
+		}
+		arr.add(input);
+
+		for (int in = 0; in < arr.size(); in++) {
+			arr.set(in, arr.get(in).strip());
+			if (arr.get(in).equals("")){
+				arr.remove(in--);
 			}
 		}
+	
+	
 		return arr;
 
 		// String[] words = input.split(" ");
