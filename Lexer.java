@@ -26,18 +26,20 @@ public class Lexer {
 		int i = 0;
 		while (i < input.length()) {
 			//System.out.println(input);
-			if (input.substring(i,i+1).equals(" ")) {
-				arr.add(input.substring(0,i+1));
-				input = input.substring(i+1);
-				i = 0;
-			}
-			else if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
+		    if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
 				arr.add(input.substring(0,i));
 				arr.add(input.substring(i,i+1));
 				input = input.substring(i+1);
 				i = 0;
 			}
-			i++;
+			else if (input.substring(i,i+1).equals(" ")) {
+				arr.add(input.substring(0,i+1));
+				input = input.substring(i+1);
+				i = 0;
+			}
+			else {
+				i++;
+			}
 				
 		}
 		arr.add(input);
