@@ -6,6 +6,7 @@ public class Application implements Expression {
     public Application(Expression left, Expression right) {
 		this.left = left;
         this.right = right;
+        
 	}
 
     public String toString() {

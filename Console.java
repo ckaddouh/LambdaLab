@@ -15,9 +15,12 @@ public class Console {
 		Parser parser = new Parser();
 		
 		String input = cleanConsoleInput();
+
 		
 		while (! input.equalsIgnoreCase("exit")) {
 			
+
+
 			ArrayList<String> tokens = lexer.tokenize(input);
 			System.out.println(tokens);
 
@@ -27,7 +30,9 @@ public class Console {
 				Expression exp = parser.parse(tokens);
 				output = exp.toString();
 			} catch (Exception e) {
-				System.out.println("Unparsable expression, input was: \"" + input + "\"");
+				if (!input.equals("")){
+					System.out.println("Unparsable expression, input was: \"" + input + "\"");
+				}
 				input = cleanConsoleInput();
 				continue;
 			}

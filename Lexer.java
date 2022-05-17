@@ -21,7 +21,6 @@ public class Lexer {
 	public ArrayList<String> tokenize(String input) {
 		String[] vals = {"(", ")", ".", "\\"};
 		ArrayList<String> arr = new ArrayList<>();
-		
 
 		int i = 0;
 		while (i < input.length()) {
@@ -50,7 +49,9 @@ public class Lexer {
 				arr.remove(in--);
 			}
 		}
-	
+		
+			
+
 	
 		return arr;
 
