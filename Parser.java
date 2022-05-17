@@ -9,9 +9,21 @@ public class Parser {
 	 */
 	public Expression parse(ArrayList<String> tokens) throws ParseException {
 
-		Variable var = new Variable(tokens.get(0));
-		// int open;
-		// int close;
+		// MIGHT BE UNNECESSARY: create a list of indexes of open and and close parens, check if balanced, 
+		// if there is a (, ), ., \, it should split into an application
+		// if there's a part of the split that is one token, that token is a variable
+		// if there's a . it's a \ at the start and . it's a function
+		// use linkedlist? or at least make a copy of the arraylist as we go
+
+		//Variable var = new Variable(tokens.get(0));
+		int open = tokens.indexOf("(");
+		int close = tokens.indexOf(")");
+		Variable var1 = new Variable(tokens.get(++open));
+		Variable var2 = new Variable(tokens.get(--close));
+		System.out.println("Variable 1 " + var1);
+		System.out.println("Variable 2 " + var2);
+		Application app1 = new Application(var1, var2);
+
 		// for (int i = 0; i < tokens.size(); i++){
 		// 	if (tokens.get(i).equals("(")){
 		// 		open = i;
@@ -31,10 +43,10 @@ public class Parser {
 		// This is nonsense code, just to show you how to thrown an Exception.
 		// To throw it, type "error" at the console.
 
-		if (var.toString().equals("error")) {
+		if (app1.toString().equals("error")) {
 			throw new ParseException("User typed \"Error\" as the input!", 0);
 		}
 		
-		return var;
+		return app1;
 	}
 }
