@@ -12,17 +12,33 @@ public class Parser {
 		// MIGHT BE UNNECESSARY: create a list of indexes of open and and close parens, check if balanced, 
 		// if there is a (, ), ., \, it should split into an application
 		// if there's a part of the split that is one token, that token is a variable
-		// if there's a . it's a \ at the start and . it's a function
+		// if there's a . it's a \ at the start and . it's a function WOAH HI KAZ I AM IN CONTROL
 		// use linkedlist? or at least make a copy of the arraylist as we go
+		String[] vals = {"(", ")", ".", "λ"};
+		int indexOpenParen = tokens.indexOf("(");
+		System.out.println(indexOpenParen);
+
+		if (tokens.size() == 1){
+			System.out.print("variable");
+			return new Variable(tokens.get(0));
+		}
+		else if (indexOpenParen != -1){
+			System.out.println("else if");
+			ArrayList<String> part1 = new ArrayList<String>(tokens.subList(indexOpenParen, tokens.indexOf(" ") + 1));
+			System.out.println("Part 1: " + part1);
+			ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.indexOf(" ") + 1, tokens.indexOf(")")));
+			System.out.println("Part 2: " + part2);
+			return new Application(parse(part1), parse(part2));
+		}
 
 		//Variable var = new Variable(tokens.get(0));
-		int open = tokens.indexOf("(");
-		int close = tokens.indexOf(")");
-		Variable var1 = new Variable(tokens.get(++open));
-		Variable var2 = new Variable(tokens.get(--close));
-		System.out.println("Variable 1 " + var1);
-		System.out.println("Variable 2 " + var2);
-		Application app1 = new Application(var1, var2);
+		// int open = tokens.indexOf("(");
+		// int close = tokens.indexOf(")");
+		// Variable var1 = new Variable(tokens.get(++open));
+		// Variable var2 = new Variable(tokens.get(--close));
+		// System.out.println("Variable 1 " + var1);
+		// System.out.println("Variable 2 " + var2);
+		// Application app1 = new Application(var1, var2);
 
 		// for (int i = 0; i < tokens.size(); i++){
 		// 	if (tokens.get(i).equals("(")){
@@ -43,10 +59,10 @@ public class Parser {
 		// This is nonsense code, just to show you how to thrown an Exception.
 		// To throw it, type "error" at the console.
 
-		if (app1.toString().equals("error")) {
-			throw new ParseException("User typed \"Error\" as the input!", 0);
-		}
+		// if (app1.toString().equals("error")) {
+		// 	throw new ParseException("User typed \"Error\" as the input!", 0);
+		// }
 		
-		return app1;
+		return new Variable ("error");
 	}
 }
