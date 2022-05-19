@@ -19,7 +19,7 @@ public class Lexer {
 	 *
 	 */
 	public ArrayList<String> tokenize(String input) {
-		String[] vals = {"(", ")", ".", "\\"};
+		String[] vals = {"(", ")", ".", "λ"};
 		ArrayList<String> arr = new ArrayList<>();
 
 		int i = 0;
