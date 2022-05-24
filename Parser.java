@@ -16,20 +16,68 @@ public class Parser {
 		// use linkedlist? or at least make a copy of the arraylist as we go
 		String[] vals = {"(", ")", ".", "λ"};
 		int indexOpenParen = tokens.indexOf("(");
-		System.out.println(indexOpenParen);
-
+		// System.out.println(tokens.get(0));
+		
 		if (tokens.size() == 1){
-			System.out.print("variable");
+			// System.out.println("variable");
 			return new Variable(tokens.get(0));
 		}
-		else if (indexOpenParen != -1){
-			System.out.println("else if");
-			ArrayList<String> part1 = new ArrayList<String>(tokens.subList(indexOpenParen, tokens.indexOf(" ") + 1));
-			System.out.println("Part 1: " + part1);
-			ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.indexOf(" ") + 1, tokens.indexOf(")")));
-			System.out.println("Part 2: " + part2);
-			return new Application(parse(part1), parse(part2));
+		if (tokens.contains("=")){
+			ArrayList<String> exp = new ArrayList<String>(tokens.subList(tokens.indexOf("=")+1, tokens.size()));
+			return new Variable(tokens.get(0), parse(exp));
 		}
+
+		if (tokens.get(0).equals( "λ")){
+			System.out.println("function");
+			Variable var = new Variable(tokens.get(tokens.indexOf("λ")+ 1));
+			System.out.println("var " + var);
+			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
+			System.out.println("app " + app);
+
+			return new Function(parse(app), var);
+		}
+		else if (indexOpenParen != -1){
+			System.out.println("application with paren");
+
+			// get rid of extra parens
+			// if (tokens.get(indexOpenParen+1).equals("(") && tokens.get(tokens.indexOf(")")+1).equals(")")){
+			// 	return new Application
+			// }
+			if (indexOpenParen != 0){
+				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, indexOpenParen));
+				System.out.print("app1");
+				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(indexOpenParen+1 , tokens.size()-1)); //+1 breaks iit for some reason???
+				return new Application(parse(app1), parse(app2));
+			}
+			else if (tokens.lastIndexOf(")") != tokens.size()-1) {
+				ArrayList<String> part1 = new ArrayList<String>(tokens.subList(indexOpenParen+1, tokens.lastIndexOf(")")));
+				ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.lastIndexOf(")")+ 1, tokens.size()));
+				System.out.println("Part 1: " + part1);
+				// ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.indexOf(" ") + 1, tokens.indexOf(")")));
+				System.out.println("Part 2: " + part2);
+				return new Application(parse(part1), parse(part2));
+			}
+			else{
+				System.out.println("u should be here");
+				ArrayList<String> p1 = new ArrayList<String>(tokens.subList(indexOpenParen+1, indexOpenParen+2));
+				System.out.println("p1: " + p1);
+				ArrayList<String> p2 = new ArrayList<String>(tokens.subList(tokens.size()-2, tokens.size()-1));
+				System.out.println("p2: " + p2);
+				return new Application(parse(p1), parse(p2));
+			}
+
+		}
+
+		else{
+			System.out.println("application without paren");
+			ArrayList<String> p1 = new ArrayList<String>(tokens.subList(0, tokens.size() -1));
+			ArrayList<String> p2 = new ArrayList<String>(tokens.subList(tokens.size()-1, tokens.size()));
+			System.out.println("p1: " + p1);
+			// ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.indexOf(" ") + 1, tokens.indexOf(")")));
+			System.out.println("p2: " + p2);
+			return new Application(parse(p1), parse(p2));
+		}
+
 
 		//Variable var = new Variable(tokens.get(0));
 		// int open = tokens.indexOf("(");
@@ -63,6 +111,6 @@ public class Parser {
 		// 	throw new ParseException("User typed \"Error\" as the input!", 0);
 		// }
 		
-		return new Variable ("error");
+		// return new Variable ("error");
 	}
 }

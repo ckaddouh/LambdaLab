@@ -8,6 +8,6 @@ public class Function implements Expression {
         this.variable = variable;
 	}
     public String toString() {
-        return "(" + expression + " " + variable + ")";
+        return "(λ" + variable + "." + expression + ")";
     }
 }
