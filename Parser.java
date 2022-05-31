@@ -70,7 +70,17 @@ public class Parser {
 		}
 
 		
-		if (indexOpenParen != -1){
+		if (tokens.get(0).equals( "λ")){
+			System.out.println("function");
+			Variable var = new Variable(tokens.get(tokens.indexOf("λ")+ 1));
+			System.out.println("var " + var);
+			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
+			System.out.println("app " + app);
+
+			return new Function(parse(app), var);
+		}
+
+		else if (indexOpenParen != -1){
 			System.out.println("application with paren");
 
 			// get rid of extra parens
@@ -95,7 +105,7 @@ public class Parser {
 //			return new Application(parse(a1), new Application(parse(a2), parse(a3)));
 			if (tokens.indexOf("(") != 0 && tokens.indexOf(")") != tokens.size()-1){
 				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf("(")));
-				System.out.print("app1");
+				System.out.print("app1: " + app1);
 				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf("(") , tokens.indexOf(")")+1)); //+1 breaks iit for some reason???
 				ArrayList<String> app3 = new ArrayList<String>(tokens.subList(tokens.indexOf(")")+1 , tokens.size())); //+1 breaks iit for some reason???
 
@@ -104,7 +114,7 @@ public class Parser {
 			}
 			else if (tokens.indexOf("(") == 0 && tokens.indexOf(")") != tokens.size()-1) {
 				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf(")")+1));
-				System.out.print("app1");
+				System.out.print("app1= " + app1);
 				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf(")")+1 , tokens.size())); //+1 breaks iit for some reason???
 
 				
@@ -112,7 +122,7 @@ public class Parser {
 			}
 			else if (tokens.indexOf(")") == tokens.size()-1 && tokens.indexOf("(") != 0 ) {
 				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf("(")));
-				System.out.print("app1");
+				System.out.print("app1:= " + app1);
 				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf("(") , tokens.indexOf(")")+1)); //+1 breaks iit for some reason???
 				
 				return new Application(parse(app1), parse(app2));
@@ -144,15 +154,6 @@ public class Parser {
 
 		}
 
-		else if (tokens.get(0).equals( "λ")){
-			System.out.println("function");
-			Variable var = new Variable(tokens.get(tokens.indexOf("λ")+ 1));
-			System.out.println("var " + var);
-			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
-			System.out.println("app " + app);
-
-			return new Function(parse(app), var);
-		}
 		
 		else{
 			int ind = tokens.indexOf("λ");
