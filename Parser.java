@@ -25,7 +25,6 @@ public class Parser {
 				closedParens.add(i);
 			}
 		}
-
 		if (openParens.size() != closedParens.size()){
 			throw new Exception();
 		}
@@ -46,17 +45,17 @@ public class Parser {
 			tokens.remove(0);
 		}
 		
-		ArrayList<Integer> openInds = new ArrayList<>();
-		ArrayList<Integer> closeInds = new ArrayList<>();
-
-		for (int i = 0; i < tokens.size(); i++){
-			if (tokens.get(i).equals("(")){
-				openParens.add(i);
-			}
-			else if (tokens.get(i).equals(")")){
-				closedParens.add(i);
-			}
-		}
+//		ArrayList<Integer> openInds = new ArrayList<>();
+//		ArrayList<Integer> closeInds = new ArrayList<>();
+//
+//		for (int i = 0; i < tokens.size(); i++){
+//			if (tokens.get(i).equals("(")){
+//				openParens.add(i);
+//			}
+//			else if (tokens.get(i).equals(")")){
+//				closedParens.add(i);
+//			}
+//		}
 		
 		int indexOpenParen = tokens.indexOf("(");
 		// System.out.println(tokens.get(0));
@@ -78,19 +77,54 @@ public class Parser {
 			// if (tokens.get(indexOpenParen+1).equals("(") && tokens.get(tokens.indexOf(")")+1).equals(")")){
 			// 	return new Application
 			// }
-			ArrayList<String> app12 = new ArrayList<>(tokens.subList(0,  tokens.indexOf(")")+1));
-			ArrayList<String> app22 = new ArrayList<>(tokens.subList(tokens.indexOf(")")+1, tokens.size()));
-			System.out.println("app12:" + app12);
-			System.out.println("app22:" + app22);
-			return new Application(parse(app12), parse(app22));
-//			if (indexOpenParen != 0){
-//				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, indexOpenParen));
-//				System.out.print("app1");
-//				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(indexOpenParen+1 , tokens.size()-1)); //+1 breaks iit for some reason???
+//			ArrayList<String> app12 = new ArrayList<>(tokens.subList(0,  tokens.indexOf(")")+1));
+//			ArrayList<String> app22 = new ArrayList<>(tokens.subList(tokens.indexOf(")")+1, tokens.size()));
+//			System.out.println("app12:" + app12);
+//			System.out.println("app22:" + app22);
+//			
+//			return new Application(parse(app12), parse(app22));
+
+//			ArrayList<String> a1 = new ArrayList<>(tokens.subList(0,  tokens.indexOf("(")));
+//			ArrayList<String> a2 = new ArrayList<>(tokens.subList(tokens.indexOf("("), tokens.indexOf(")")+1));
+//			ArrayList<String> a3 = new ArrayList<>(tokens.subList(tokens.indexOf(")")+1,  tokens.size()));
 //
-//				
-//				return new Application(parse(app1), parse(app2));
-//			}
+//			System.out.println("a1:" + a1);
+//			System.out.println("a2:" + a2);
+//			System.out.println("a3:" + a3);
+			
+//			return new Application(parse(a1), new Application(parse(a2), parse(a3)));
+			if (tokens.indexOf("(") != 0 && tokens.indexOf(")") != tokens.size()-1){
+				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf("(")));
+				System.out.print("app1");
+				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf("(") , tokens.indexOf(")")+1)); //+1 breaks iit for some reason???
+				ArrayList<String> app3 = new ArrayList<String>(tokens.subList(tokens.indexOf(")")+1 , tokens.size())); //+1 breaks iit for some reason???
+
+				
+				return new Application(parse(app1), new Application(parse(app2), parse(app3)));
+			}
+			else if (tokens.indexOf("(") == 0 && tokens.indexOf(")") != tokens.size()-1) {
+				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf(")")+1));
+				System.out.print("app1");
+				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf(")")+1 , tokens.size())); //+1 breaks iit for some reason???
+
+				
+				return new Application(parse(app1), parse(app2));
+			}
+			else if (tokens.indexOf(")") == tokens.size()-1 && tokens.indexOf("(") != 0 ) {
+				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf("(")));
+				System.out.print("app1");
+				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf("(") , tokens.indexOf(")")+1)); //+1 breaks iit for some reason???
+				
+				return new Application(parse(app1), parse(app2));
+			}
+			else {
+				// open paren is at front and close paren is at end
+				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(1, tokens.size()-1));
+				ArrayList<String> app2 = new ArrayList<>();
+
+				return new Application(parse(app1), parse(app2)) ;
+			}
+			
 //			else if (tokens.lastIndexOf(")") != tokens.size()-1) {
 //				ArrayList<String> part1 = new ArrayList<String>(tokens.subList(indexOpenParen+1, tokens.lastIndexOf(")")));
 //				ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.lastIndexOf(")")+ 1, tokens.size()));
