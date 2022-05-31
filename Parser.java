@@ -7,14 +7,45 @@ public class Parser {
 	/*
 	 * Turns a set of tokens into an expression.  Comment this back in when you're ready.
 	 */
-	public Expression parse(ArrayList<String> tokens) throws ParseException {
+	public Expression parse(ArrayList<String> tokens) throws Exception {
 
 		// MIGHT BE UNNECESSARY: create a list of indexes of open and and close parens, check if balanced, 
 		// if there is a (, ), ., \, it should split into an application
 		// if there's a part of the split that is one token, that token is a variable
 		// if there's a . it's a \ at the start and . it's a function WOAH HI KAZ I AM IN CONTROL
 		// use linkedlist? or at least make a copy of the arraylist as we go
-		String[] vals = {"(", ")", ".", "λ"};
+		ArrayList<Integer> openParens = new ArrayList<Integer>();
+		ArrayList<Integer> closedParens = new ArrayList<Integer>();
+
+		for (int i = 0; i < tokens.size(); i++){
+			if (tokens.get(i).equals("(")){
+				openParens.add(i);
+			}
+			else if (tokens.get(i).equals(")")){
+				closedParens.add(i);
+			}
+		}
+
+		if (openParens.size() != closedParens.size()){
+			throw new Exception();
+		}
+		// System.out.println(openParens);
+		// System.out.println(closedParens);
+		for (int j = 0; j < openParens.size()-1; j++){
+			if (openParens.get(j)+1 == openParens.get(j+1) && closedParens.get(closedParens.size()-j-1)-1 == closedParens.get(closedParens.size()-j-2)){
+				tokens.set(openParens.get(j), null);
+				tokens.set(closedParens.get(closedParens.size()-1-j), null);
+			}
+		}
+		while(tokens.contains(null)){
+			tokens.remove(null);
+		}
+		// System.out.println(tokens);
+		if (tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")")){
+			tokens.remove(tokens.size()-1);
+			tokens.remove(0);
+		}
+
 		int indexOpenParen = tokens.indexOf("(");
 		// System.out.println(tokens.get(0));
 		
@@ -52,17 +83,17 @@ public class Parser {
 			else if (tokens.lastIndexOf(")") != tokens.size()-1) {
 				ArrayList<String> part1 = new ArrayList<String>(tokens.subList(indexOpenParen+1, tokens.lastIndexOf(")")));
 				ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.lastIndexOf(")")+ 1, tokens.size()));
-				System.out.println("Part 1: " + part1);
+				// System.out.println("Part 1: " + part1);
 				// ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.indexOf(" ") + 1, tokens.indexOf(")")));
-				System.out.println("Part 2: " + part2);
+				// System.out.println("Part 2: " + part2);
 				return new Application(parse(part1), parse(part2));
 			}
 			else{
 				System.out.println("u should be here");
 				ArrayList<String> p1 = new ArrayList<String>(tokens.subList(indexOpenParen+1, indexOpenParen+2));
-				System.out.println("p1: " + p1);
+				// System.out.println("p1: " + p1);
 				ArrayList<String> p2 = new ArrayList<String>(tokens.subList(tokens.size()-2, tokens.size()-1));
-				System.out.println("p2: " + p2);
+				// System.out.println("p2: " + p2);
 				return new Application(parse(p1), parse(p2));
 			}
 

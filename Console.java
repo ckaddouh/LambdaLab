@@ -32,6 +32,7 @@ public class Console {
 			} catch (Exception e) {
 				if (!input.equals("")){
 					System.out.println("Unparsable expression, input was: \"" + input + "\"");
+					System.out.println(e);
 				}
 				input = cleanConsoleInput();
 				continue;
