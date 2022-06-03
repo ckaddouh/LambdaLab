@@ -2,6 +2,10 @@
 import java.text.ParseException;
 import java.util.ArrayList;
 
+// notes:
+// ask isecke how things should be processed, 
+//like how to fix for (\a.a) (\b.b) c the output is putting the b function and c together instead of the two functions
+//everything except 16a and 12 with extraneous parens at the end 	works
 public class Parser {
 	
 	/*
@@ -34,16 +38,35 @@ public class Parser {
 			if (openParens.get(j)+1 == openParens.get(j+1) && closedParens.get(closedParens.size()-j-1)-1 == closedParens.get(closedParens.size()-j-2)){
 				tokens.set(openParens.get(j), null);
 				tokens.set(closedParens.get(closedParens.size()-1-j), null);
+				// System.out.println(j + " : " + tokens);
 			}
 		}
+
 		while(tokens.contains(null)){
 			tokens.remove(null);
 		}
+
+
+		for (int i = 0; i < tokens.size()-2; i++){
+			// System.out.println("loop");
+			if (tokens.get(i).equals("(") && tokens.get(i+2).equals(")")){
+				tokens.set(i, "null");
+				tokens.set(i+2, "null");
+			}
+		}
+
+		while(tokens.contains("null")){
+			tokens.remove("null");
+		}
 		// System.out.println(tokens);
-		if (tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")")){
+
+		if (tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")") && tokens.lastIndexOf("(") == 0){
+			// System.out.println("end parens");
 			tokens.remove(tokens.size()-1);
 			tokens.remove(0);
 		}
+		// System.out.println(tokens);
+
 		
 //		ArrayList<Integer> openInds = new ArrayList<>();
 //		ArrayList<Integer> closeInds = new ArrayList<>();
@@ -71,17 +94,17 @@ public class Parser {
 
 		
 		if (tokens.get(0).equals( "λ")){
-			System.out.println("function");
+			// System.out.println("function");
 			Variable var = new Variable(tokens.get(tokens.indexOf("λ")+ 1));
-			System.out.println("var " + var);
+			// System.out.println("var " + var);
 			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
-			System.out.println("app " + app);
+			// System.out.println("app " + app);
 
 			return new Function(parse(app), var);
 		}
 
 		else if (indexOpenParen != -1){
-			System.out.println("application with paren");
+			// System.out.println("application with paren");
 
 			// get rid of extra parens
 			// if (tokens.get(indexOpenParen+1).equals("(") && tokens.get(tokens.indexOf(")")+1).equals(")")){
@@ -105,7 +128,7 @@ public class Parser {
 //			return new Application(parse(a1), new Application(parse(a2), parse(a3)));
 			if (tokens.indexOf("(") != 0 && tokens.indexOf(")") != tokens.size()-1){
 				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf("(")));
-				System.out.print("app1: " + app1);
+				// System.out.print("app1: " + app1);
 				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf("(") , tokens.indexOf(")")+1)); //+1 breaks iit for some reason???
 				ArrayList<String> app3 = new ArrayList<String>(tokens.subList(tokens.indexOf(")")+1 , tokens.size())); //+1 breaks iit for some reason???
 
@@ -114,7 +137,7 @@ public class Parser {
 			}
 			else if (tokens.indexOf("(") == 0 && tokens.indexOf(")") != tokens.size()-1) {
 				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf(")")+1));
-				System.out.print("app1= " + app1);
+				// System.out.print("app1= " + app1);
 				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf(")")+1 , tokens.size())); //+1 breaks iit for some reason???
 
 				
@@ -122,7 +145,7 @@ public class Parser {
 			}
 			else if (tokens.indexOf(")") == tokens.size()-1 && tokens.indexOf("(") != 0 ) {
 				ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, tokens.indexOf("(")));
-				System.out.print("app1:= " + app1);
+				// System.out.print("app1:= " + app1);
 				ArrayList<String> app2 = new ArrayList<String>(tokens.subList(tokens.indexOf("(") , tokens.indexOf(")")+1)); //+1 breaks iit for some reason???
 				
 				return new Application(parse(app1), parse(app2));
@@ -163,12 +186,12 @@ public class Parser {
 				return new Application(parse(p1), parse(p2));
 			}
 			else {
-				System.out.println("application without paren");
+				// System.out.println("application without paren");
 				ArrayList<String> p1 = new ArrayList<String>(tokens.subList(0, tokens.size() -1));
 				ArrayList<String> p2 = new ArrayList<String>(tokens.subList(tokens.size()-1, tokens.size()));
-				System.out.println("p1: " + p1);
+				// System.out.println("p1: " + p1);
 				// ArrayList<String> part2 = new ArrayList<String>(tokens.subList(tokens.indexOf(" ") + 1, tokens.indexOf(")")));
-				System.out.println("p2: " + p2);
+				// System.out.println("p2: " + p2);
 				return new Application(parse(p1), parse(p2));
 			}
 			
