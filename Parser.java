@@ -3,9 +3,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 // notes:
-// \a.a \b.b doesn't work because \b.b doesn't have the parenthesis from lexer
-// figure out how to parse through to get rid of extra parentheses
-// the list of parens does work though
+// applications with functions are stacking incorrectly
+// inputs that have wrong outputs:
+// 9, last one in 15, first two in 16
+// i think that it's not determining the top level items correctly
 public class Parser {
 	
 	/*
@@ -37,8 +38,13 @@ public class Parser {
 			parensTokens.add(parenCount);
 			// System.out.println(parensTokens);
 		}
-		System.out.println(parensTokens);
 		//how to recurse parse without the error????
+
+		if (parensTokens.get(0)-1 == parensTokens.get(tokens.size()-1) && tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")")){
+			ArrayList<String> newTokens = new ArrayList<String>(tokens.subList(1, tokens.size()-1));
+			return parse(newTokens);
+		}
+		System.out.println(parensTokens);
 		
 		// ArrayList<Integer> openParens = new ArrayList<Integer>();
 		// ArrayList<Integer> closedParens = new ArrayList<Integer>();
@@ -142,8 +148,10 @@ public class Parser {
 		else{
 			System.out.println("application");
 		
-			ArrayList<String> app1 = new ArrayList<String>(tokens.subList(0, parensTokens.lastIndexOf(0)));
-			ArrayList<String> app2 = new ArrayList<>(tokens.subList(parensTokens.lastIndexOf(0), tokens.size()));
+			ArrayList<String> app1 = new ArrayList<>(tokens.subList(0, parensTokens.indexOf(0)+1));
+			System.out.println("app1= " + app1);
+			ArrayList<String> app2 = new ArrayList<>(tokens.subList(parensTokens.indexOf(0)+1, tokens.size()));
+			System.out.println("app2= " + app2);
 			return new Application(parse(app1), parse(app2));
 		}
 // 		else if (indexOpenParen != -1){

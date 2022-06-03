@@ -55,12 +55,11 @@ public class Lexer {
 	
 		System.out.println(arr);
 		for (int y = 1; y < arr.size(); y++) {
-			
+			System.out.print(arr.get(y));
 			if (arr.get(y).equals("λ")) {
-				// lambdaInds.add(i);
 				System.out.println("lambd");
 				if (!arr.get(y-1).equals("(")) {
-					arr.add(y-1, "(");
+					arr.add(y, "(");
 					int x = y+1;
 					int parenCount = 1;
 					while (x < arr.size() && parenCount > 0) {
@@ -74,8 +73,9 @@ public class Lexer {
 					}
 					arr.add(x, ")");
 				}
+				y++;
 			}
-			y++;
+
 		}
 
 		System.out.println(arr);
