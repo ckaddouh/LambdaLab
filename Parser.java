@@ -91,6 +91,21 @@ public class Parser {
 			ArrayList<String> exp = new ArrayList<String>(tokens.subList(tokens.indexOf("=")+1, tokens.size()));
 			return new Variable(tokens.get(0), parse(exp));
 		}
+		
+		if (tokens.get(0).equals("run")) {
+			if (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))) instanceof Variable) 
+				return (Variable)(parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))));
+			 if (!tokens.contains("λ")) {
+				return (Expression) (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))));
+			}
+			if (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))) instanceof Variable) {
+				// if parsing first part gives function and parsing second part gives variable, run it
+			}
+		}
+ // PAREN COUNT; ADD A PAREN EVERY TIME YOU SEE A LAMBDA AND THEN WHEN THE COUNT BECOMES 0
+	// (IE IT'S UNBALANCED)
+		// ONE LAYER OF PAREN, VAR, EXTRA PAREN, FUNCTION (IF LAMBDA IS FIRST)
+		// APPLICATION - COUNT HOW MANY TOP LEVEL ITEMS
 
 		
 		if (tokens.get(0).equals( "λ")){
