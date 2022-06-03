@@ -37,33 +37,33 @@ public class Parser {
 		if (openParens.size() != closedParens.size()){
 			throw new Exception();
 		}
-		// System.out.println(openParens);
-		// System.out.println(closedParens);
-		for (int j = 0; j < openParens.size()-1; j++){
-			if (openParens.get(j)+1 == openParens.get(j+1) && closedParens.get(closedParens.size()-j-1)-1 == closedParens.get(closedParens.size()-j-2)){
-				tokens.set(openParens.get(j), null);
-				tokens.set(closedParens.get(closedParens.size()-1-j), null);
-				// System.out.println(j + " : " + tokens);
-			}
-		}
+		// // System.out.println(openParens);
+		// // System.out.println(closedParens);
+		// for (int j = 0; j < openParens.size()-1; j++){
+		// 	if (openParens.get(j)+1 == openParens.get(j+1) && closedParens.get(closedParens.size()-j-1)-1 == closedParens.get(closedParens.size()-j-2)){
+		// 		tokens.set(openParens.get(j), null);
+		// 		tokens.set(closedParens.get(closedParens.size()-1-j), null);
+		// 		// System.out.println(j + " : " + tokens);
+		// 	}
+		// }
 
-		while(tokens.contains(null)){
-			tokens.remove(null);
-		}
+		// while(tokens.contains(null)){
+		// 	tokens.remove(null);
+		// }
 
 
-		for (int i = 0; i < tokens.size()-2; i++){
-			// System.out.println("loop");
-			if (tokens.get(i).equals("(") && tokens.get(i+2).equals(")")){
-				tokens.set(i, "null");
-				tokens.set(i+2, "null");
-			}
-		}
+		// for (int i = 0; i < tokens.size()-2; i++){
+		// 	// System.out.println("loop");
+		// 	if (tokens.get(i).equals("(") && tokens.get(i+2).equals(")")){
+		// 		tokens.set(i, "null");
+		// 		tokens.set(i+2, "null");
+		// 	}
+		// }
 
-		while(tokens.contains("null")){
-			tokens.remove("null");
-		}
-		// System.out.println(tokens);
+		// while(tokens.contains("null")){
+		// 	tokens.remove("null");
+		// }
+		// // System.out.println(tokens);
 
 		if (tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")") && tokens.lastIndexOf("(") == 0){
 			// System.out.println("end parens");
@@ -95,7 +95,7 @@ public class Parser {
 		if (tokens.contains("=")){
 			ArrayList<String> exp = new ArrayList<String>(tokens.subList(tokens.indexOf("=")+1, tokens.size()));
 			return new Variable(tokens.get(0), parse(exp));
-		}
+		} 
 		
 		if (tokens.get(0).equals("run")) {
 			if (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))) instanceof Variable) 
