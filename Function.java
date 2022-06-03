@@ -3,7 +3,7 @@ public class Function implements Expression {
     private Expression expression;
     private Variable variable;
 
-    public Function(Expression expression, Variable variable) {
+    public Function(Variable variable, Expression expression) {
 		this.expression = expression;
         this.variable = variable;
 	}
