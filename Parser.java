@@ -18,8 +18,13 @@ public class Parser {
 		// if there's a part of the split that is one token, that token is a variable
 		// if there's a . it's a \ at the start and . it's a function WOAH HI KAZ I AM IN CONTROL
 		// use linkedlist? or at least make a copy of the arraylist as we go
+
+		// ArrayList<Integer> lambdaInds = new ArrayList<Integer>();
+	
+		
 		ArrayList<Integer> openParens = new ArrayList<Integer>();
 		ArrayList<Integer> closedParens = new ArrayList<Integer>();
+
 
 		for (int i = 0; i < tokens.size(); i++){
 			if (tokens.get(i).equals("(")){

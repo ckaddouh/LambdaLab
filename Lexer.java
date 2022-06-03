@@ -53,6 +53,35 @@ public class Lexer {
 			
 
 	
+		System.out.println(arr);
+		for (int y = 1; y < arr.size(); y++) {
+			
+			if (arr.get(y).equals("λ")) {
+				// lambdaInds.add(i);
+				System.out.println("lambd");
+				if (!arr.get(y-1).equals("(")) {
+					arr.add(y-1, "(");
+					int x = y+1;
+					int parenCount = 1;
+					while (x < arr.size() && parenCount > 0) {
+						if (arr.get(x).equals(")")) {
+							parenCount--;
+						}
+						if (arr.get(x).equals("(")) {
+							parenCount++;
+						}
+						x++;
+					}
+					arr.add(x, ")");
+				}
+			}
+			y++;
+		}
+
+		System.out.println(arr);
+		System.out.println("PAREN THING DONE");
+
+
 		return arr;
 
 		// String[] words = input.split(" ");
