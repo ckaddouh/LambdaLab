@@ -143,15 +143,23 @@ public class Parser {
 			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
 			// System.out.println("app " + app);
 
-			return new Function(var, parse(app));
+			return new Function(parse(app), var);
 		}
 		else{
 			System.out.println("application");
+			System.out.println(parensTokens);
 		
-			ArrayList<String> app1 = new ArrayList<>(tokens.subList(0, parensTokens.indexOf(0)+1));
+//			ArrayList<String> app1 = new ArrayList<>(tokens.subList(0, parensTokens.indexOf(0)+1));
+//			System.out.println("app1= " + app1);
+//			ArrayList<String> app2 = new ArrayList<>(tokens.subList(parensTokens.indexOf(0)+1, tokens.size()));
+//			System.out.println("app2= " + app2);
+			
+			ArrayList<String> app1 = new ArrayList<>(tokens.subList(0, parensTokens.lastIndexOf(1)+1));
 			System.out.println("app1= " + app1);
-			ArrayList<String> app2 = new ArrayList<>(tokens.subList(parensTokens.indexOf(0)+1, tokens.size()));
+			ArrayList<String> app2 = new ArrayList<>(tokens.subList(parensTokens.lastIndexOf(1)+1, tokens.size()));
 			System.out.println("app2= " + app2);
+			
+		
 			return new Application(parse(app1), parse(app2));
 		}
 // 		else if (indexOpenParen != -1){
