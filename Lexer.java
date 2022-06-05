@@ -19,7 +19,7 @@ public class Lexer {
 	 *
 	 */
 	public ArrayList<String> tokenize(String input) {
-		String[] vals = {"(", ")", ".", "λ"};
+		String[] vals = {"(", ")", ".", "λ", "="};
 		ArrayList<String> arr = new ArrayList<>();
 
 		int i = 0;
@@ -57,7 +57,7 @@ public class Lexer {
 		for (int y = 1; y < arr.size(); y++) {
 			System.out.print(arr.get(y));
 			if (arr.get(y).equals("λ")) {
-				System.out.println("lambd");
+				System.out.print("lambd");
 				if (!arr.get(y-1).equals("(")) {
 					arr.add(y, "(");
 					int x = y+1;

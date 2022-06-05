@@ -33,11 +33,14 @@ public class Parser {
 				parenCount--;
 			}
 			parensTokens.add(parenCount);
-			// System.out.println(parensTokens);
+			// System.out.println("Parens Tokens: " + parensTokens);
 		}
 		//how to recurse parse without the error????
-
-		if (parensTokens.get(0)-1 == parensTokens.get(tokens.size()-1) && tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")")){
+		System.out.println(parensTokens);
+		System.out.println(tokens);
+		
+		if (parensTokens.get(0)== 1 && parensTokens.get(tokens.size()-1) == 0 && parensTokens.indexOf(0) == parensTokens.lastIndexOf(0)){
+			System.out.println("get rid of extra parens");
 			ArrayList<String> newTokens = new ArrayList<String>(tokens.subList(1, tokens.size()-1));
 			return parse(newTokens);
 		}
@@ -79,12 +82,12 @@ public class Parser {
 		// 	tokens.remove("null");
 		// }
 		// // System.out.println(tokens);
-		if (tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")") && tokens.lastIndexOf("(") == 0){
-			System.out.println("removed extra parens");
-			tokens.remove(tokens.size()-1);
-			tokens.remove(0);
-		}
-		System.out.println(tokens);
+
+		// if (tokens.get(0).equals("(") && tokens.get(tokens.size()-1).equals(")") && tokens.lastIndexOf("(") == 0){
+		// 	System.out.println("removed extra parens");
+		// 	tokens.remove(tokens.size()-1);
+		// 	tokens.remove(0);
+		// }
 		
 //		ArrayList<Integer> openInds = new ArrayList<>();
 //		ArrayList<Integer> closeInds = new ArrayList<>();
@@ -102,8 +105,9 @@ public class Parser {
 			for (int i = 0; i < vars.size(); i++) {
 				if (vars.get(i).name.equals(tokens.get(0))) {
 					System.out.println(tokens.get(0) + " is already defined.");
+					return null;
 					// NEED TO RETURN NULL OR SOMETHING HERE INSTEAD, SOMETHING THAT WON'T BREAK IT
-					return new Variable(tokens.get(0), parse(exp));
+					// return new Variable(tokens.get(0), parse(exp));
 				}
 			}
 			Variable v = new Variable(tokens.get(0), parse(exp));
@@ -152,7 +156,7 @@ public class Parser {
 			// System.out.println("var " + var);
 			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
 			// System.out.println("app " + app);
-			return new Function(parse(app), var);
+			return new Function(var, parse(app));
 		}
 		else{
 			System.out.println("application");

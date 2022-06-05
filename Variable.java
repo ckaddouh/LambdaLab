@@ -1,7 +1,7 @@
 
 public class Variable implements Expression {
-	private String name;
-	private Expression expression;
+	public String name;
+	public Expression expression;
 	
 	public Variable(String name) {
 		this.name = name;

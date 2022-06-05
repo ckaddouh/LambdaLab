@@ -1,7 +1,7 @@
 
 public class Function implements Expression {
-    private Expression expression;
-    private Variable variable;
+    public Expression expression;
+    public Variable variable;
 
     public Function(Variable variable, Expression expression) {
 		this.expression = expression;
