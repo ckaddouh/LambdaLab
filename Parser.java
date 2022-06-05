@@ -111,7 +111,7 @@ public class Parser {
 			return v;
 		} 
 		
-		if (tokens.get(0).equals("run")) {
+		if (tokens.get(0).equals("run")) {			
 			if (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))) instanceof Variable) 
 				return (Variable)(parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))));
 			 if (!tokens.contains("λ")) {
@@ -120,9 +120,11 @@ public class Parser {
 			 else if (parse(new ArrayList<String>(tokens.subList(1, tokens.size()))) instanceof Function){
 				 return parse(new ArrayList<String>(tokens.subList(1, tokens.size())));
 			 }
-			if (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))) instanceof Variable) {
-				// if parsing first part gives function and parsing second part gives variable, run it
-			}
+			 // if the last grouping is a var and the first grouping is a function, make a new app?			
+			// NOT WORKING, how to actually make y go into \x.x
+			 else if (parse(new ArrayList<String>(tokens.subList(1, 2))) instanceof Function && parse(new ArrayList<>(tokens.subList(parensTokens.subList(0, parensTokens.size()-1).lastIndexOf(0)+1, tokens.size()))) instanceof Variable) {
+				 return new Application(parse(new ArrayList<String>(tokens.subList(1, 2))), parse(new ArrayList<>(tokens.subList(parensTokens.subList(0, parensTokens.size()-1).lastIndexOf(0)+1, tokens.size()))));
+			 }
 		}
 		// System.out.println(tokens.get(0));
 		
