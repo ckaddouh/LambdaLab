@@ -140,7 +140,7 @@ public class Parser {
 					return vars.get(i).expression;
 				}
 			}
-			return new Variable(tokens.get(0));
+			return new FreeVar(tokens.get(0));
 			
 		}
 		
@@ -152,7 +152,7 @@ public class Parser {
 		
 		if (tokens.get(0).equals( "λ")){
 			System.out.println("function");
-			Variable var = new Variable(tokens.get(tokens.indexOf("λ")+ 1));
+			BoundVar var = new BoundVar(tokens.get(tokens.indexOf("λ")+ 1));
 			// System.out.println("var " + var);
 			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
 			// System.out.println("app " + app);
