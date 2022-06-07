@@ -1,9 +1,9 @@
 
 public class Function implements Expression {
     public Expression expression;
-    public BoundVar variable;
+    public Parameter variable;
 
-    public Function(BoundVar variable, Expression expression) {
+    public Function(Parameter variable, Expression expression) {
 		this.expression = expression;
         this.variable = variable;
 	}

@@ -9,6 +9,14 @@ public class Application implements Expression {
         
 	}
 
+    // public Application deepCopy(Application a) {
+    //     Application newApp = new Application();
+        
+    //     while (a.left != null) {
+    //         Application n = new Application(deepCopy(a.left), deepCopy(a.right));
+    //     }
+    // }
+
     public String toString() {
         return "(" + left + " " + right + ")";
     }

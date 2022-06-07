@@ -8,4 +8,13 @@ public class BoundVar extends Variable{
         name = newName;
     }
     
+    @Override
+	public String toString() {
+        System.out.println("Bound Var");
+
+		// return "Bound Var!!: " + name;
+        return name;
+	}
+
+    
 }

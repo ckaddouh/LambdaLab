@@ -16,6 +16,7 @@ public class Variable implements Expression {
 		if (expression != null){
 			return "Added " + name + " as " + expression.toString();
 		}
+		System.out.println("normal... ");
 		return name;
 	}
 
