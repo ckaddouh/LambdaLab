@@ -11,11 +11,17 @@ public class Parser {
 	 * Turns a set of tokens into an expression.  Comment this back in when you're ready.
 	 */
 	public ArrayList<Variable> vars = new ArrayList<>();
-	ArrayList<String> paramIndex = new ArrayList<>();
+
 
 
 	public Expression parse(ArrayList<String> tokens) throws Exception {
+		ArrayList<Parameter> paramVars = new ArrayList<>();
+		return parseRunner(tokens, paramVars);
+	}
+	
+	public Expression parseRunner(ArrayList<String> tokens, ArrayList<Parameter> params) throws Exception {
 		System.out.println("new parse");
+		System.out.println(params);
 		// MIGHT BE UNNECESSARY: create a list of indexes of open and and close parens, check if balanced, 
 		// if there is a (, ), ., \, it should split into an application
 		// if there's a part of the split that is one token, that token is a variable
@@ -44,7 +50,7 @@ public class Parser {
 		if (parensTokens.get(0)== 1 && parensTokens.get(tokens.size()-1) == 0 && parensTokens.indexOf(0) == parensTokens.lastIndexOf(0)){
 			System.out.println("get rid of extra parens");
 			ArrayList<String> newTokens = new ArrayList<String>(tokens.subList(1, tokens.size()-1));
-			return parse(newTokens);
+			return parseRunner(newTokens, params);
 		}
 		System.out.println(parensTokens);
 
@@ -59,43 +65,10 @@ public class Parser {
 					// return new Variable(tokens.get(0), parse(exp));
 				}
 			}
-			Variable v = new Variable(tokens.get(0), parse(exp));
+			Variable v = new Variable(tokens.get(0), parseRunner(exp, params));
 			vars.add(v);
 			return v;
 		} 
-		
-		if (tokens.get(0).equals("run")) {			
-			if (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))) instanceof Variable) 
-				return (Variable)(parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))));
-			 if (!tokens.contains("λ")) {
-				return (Expression) (parse(new ArrayList<String>(tokens.subList(1,  tokens.size()))));
-			 }
-			 else if (parse(new ArrayList<String>(tokens.subList(1, tokens.size()))) instanceof Function){
-				 return parse(new ArrayList<String>(tokens.subList(1, tokens.size())));
-			 }
-			 // if the last grouping is a var and the first grouping is a function, make a new app?			
-			// NOT WORKING, how to actually make y go into \x.x
-			 else{
-				Expression e = parse(new ArrayList<String>(tokens.subList(1,  tokens.size())));
-				Lexer l = new Lexer();
-				ArrayList<String> t = l.tokenize(e.toString());
-				ArrayList<Integer> finalTokens = parenTokenList(t);
-				for (int i = 0; i < finalTokens.size()-1; i++){
-					if (tokens.get(i).equals("λ")){
-						Parameter one = new Parameter(tokens.get(i+1));
-						paramIndex.add(one.name);
-						// for (int j = i+2; j < tokens.size() ; j++){
-						// 	if (tokens.get(j).equals(one.name) && finalTokens.get(j) >= finalTokens.get(i)){
-						// 		boundIndex.add(j);
-						// 	}
-						// }
-					}
-				}
-				e = parse(t);
-
-			 }
-		}
-		// System.out.println(tokens.get(0));
 		
 		if (tokens.size() == 1){
 			System.out.println("variable");
@@ -105,34 +78,56 @@ public class Parser {
 					return vars.get(i).expression;
 				}
 			}
-			if (paramIndex.contains(tokens.get(0).toString())){
-				return new BoundVar(tokens.get(0));
+			for (int i = 0; i < params.size(); i++) {
+				if (params.get(i).name.equals(tokens.get(0))) {
+					params.get(i).addVar(new BoundVar(tokens.get(0)));
+					return new BoundVar(tokens.get(0));
+				}
 			}
+			
 			return new FreeVar(tokens.get(0));
 			
 		}
 		
-
+		if (tokens.get(0).equals("run")) {		
+			Expression p = parseRunner(new ArrayList<String>(tokens.subList(1,  tokens.size())), params);
+			if (p instanceof Variable) 
+				return (Variable)(p);
+//			 if (!tokens.contains("λ")) {
+//				return (Expression) (parseRunner(new ArrayList<String>(tokens.subList(1,  tokens.size())), params));
+//			 }
+//			 else if (parseRunner(new ArrayList<String>(tokens.subList(1, tokens.size())), params) instanceof Function){
+			return p;
+			 //}
+		}
+			
  // PAREN COUNT; ADD A PAREN EVERY TIME YOU SEE A LAMBDA AND THEN WHEN THE COUNT BECOMES 0
 	// (IE IT'S UNBALANCED)
 		// ONE LAYER OF PAREN, VAR, FUNCTION (IF LAMBDA IS FIRST)
 		// APPLICATION - COUNT HOW MANY TOP LEVEL ITEMS  ((\a.a) (\b.b))
 		
 		if (tokens.get(0).equals( "λ")){
+			System.out.println("TOKENS");
+			System.out.println(tokens);
 			System.out.println("function");
 			Parameter var = new Parameter(tokens.get(tokens.indexOf("λ")+ 1));
+			params.add(var);
+
+			// System.out.println(params);
 			// System.out.println("var " + var);
 			ArrayList<String> app = new ArrayList<String>(tokens.subList(tokens.indexOf(".")+1, tokens.size()));
-			Expression exp = parse(app);
-			System.out.println("exp: "+ exp);
+			System.out.println("APP");
+			System.out.println(app);
+//			Expression exp = parseRunner(app, params);
+//			System.out.println("exp: "+ exp);
 			// System.out.println("app " + app);
-			return new Function(var, parse(app));
+			return new Function(var, parseRunner(app, params));
 		}
 		else{
 			System.out.println("application");
  // go from open paren all to close
-		// go backwards, from 0 to 0 before, parse what's inside (treat that as an expression)
-			// then parse everything to the left of it
+		// go backwards, from 0 to 0 before, parseRunner what's inside (treat that as an expression)
+			// then parseRunner everything to the left of it
 			// if no parens, treat that thing as an expression
 			
 
@@ -141,7 +136,7 @@ public class Parser {
 				System.out.println("app1= " + app1);
 				ArrayList<String> app2 = new ArrayList<>(tokens.subList(parensTokens.subList(0, parensTokens.size()-1).lastIndexOf(0)+1, tokens.size()));
 				System.out.println("app2= " + app2);
-				return new Application(parse(app1), parse(app2));
+				return new Application(parseRunner(app2, params), parseRunner(app1, params));
 
 			}
 			else {
@@ -149,7 +144,7 @@ public class Parser {
 				System.out.println("app1= " + app1);
 				ArrayList<String> app2 = new ArrayList<>(tokens.subList(tokens.size()-1, tokens.size()));
 				System.out.println("app2= " + app2);	
-				return new Application(parse(app1), parse(app2));
+				return new Application(parseRunner(app2, params), parseRunner(app1, params));
 
 			}
 		}
