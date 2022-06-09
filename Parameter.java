@@ -15,10 +15,14 @@ public class Parameter extends Variable{
     public void addVar(BoundVar var){
         list.add(var);
     }
+    
+    public ArrayList<BoundVar> getList(){
+    	return list;
+    }
 
     @Override
 	public String toString() {
-        System.out.println("Parameter");
+        System.out.println("Parameter: " + name);
 		// return "Param Var!!: " + name;
         return name;
 	}
