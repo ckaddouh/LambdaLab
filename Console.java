@@ -28,11 +28,13 @@ public class Console {
 			
 			try {
 				Expression exp = parser.parse(tokens);
+				if (parser.isRun) {
+					runNextRedex(exp);
+				}
 				output = exp.toString();
 			} catch (Exception e) {
 				if (!input.equals("")){
 					System.out.println("Unparsable expression, input was: \"" + input + "\"");
-					System.out.println(e);
 				}
 				input = cleanConsoleInput();
 				continue;
@@ -69,6 +71,28 @@ public class Console {
 		return clean.replaceAll("\\\\", "λ");
 	}
 	
+	public Expression runNextRedex(Expression e) {
+		if (e instanceof Application) {
+			Application a = ((Application) e);
+			if (a.left instanceof Function) {
+				e = replace(a.left, a.right);
+			}
+		}
+		return e;
+	}
+	
+	public Expression replace(Expression left, Expression right) {
+		Function funcLeft = ((Function) left);
+		String newExp = "";
+		
+		for (int i = 0; i < funcLeft.variable.getList().size(); i++) {
+			for (int j = 0; j < funcLeft.expression.toString().length(); j++) {
+				if (funcLeft.expression.toString().substring(j, j+1) == funcLeft.variable.getList().get(i).name) {
+					
+				}
+			}
+		}
+	}
 	
 	public static String removeWeirdWhitespace(String input) {
 		String whitespace_chars =  ""       /* dummy empty string for homogeneity */
