@@ -12,7 +12,7 @@ public class Parser {
 	public Expression parse(ArrayList<String> tokens) throws Exception {
 		ArrayList<Parameter> paramVars = new ArrayList<>();
 		return parseRunner(tokens, paramVars);
-	}
+	}s
 	
 	public Expression parseRunner(ArrayList<String> tokens, ArrayList<Parameter> params) throws Exception {
 		System.out.println("new parse");
