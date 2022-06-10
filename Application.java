@@ -3,7 +3,7 @@ public class Application implements Expression {
     public Expression left;
     public Expression right;
 
-    public Application(Expression right, Expression left) {
+    public Application(Expression left, Expression right) {
 		this.left = left;
         this.right = right;
         

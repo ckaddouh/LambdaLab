@@ -12,7 +12,7 @@ public class Parser {
 	public Expression parse(ArrayList<String> tokens) throws Exception {
 		ArrayList<Parameter> paramVars = new ArrayList<>();
 		return parseRunner(tokens, paramVars);
-	}s
+	}
 	
 	public Expression parseRunner(ArrayList<String> tokens, ArrayList<Parameter> params) throws Exception {
 		System.out.println("new parse");
@@ -93,15 +93,19 @@ public class Parser {
 				System.out.println("app1= " + app1);
 				ArrayList<String> app2 = new ArrayList<>(tokens.subList(parensTokens.subList(0, parensTokens.size()-1).lastIndexOf(0)+1, tokens.size()));
 				System.out.println("app2= " + app2);
-				return new Application(parseRunner(app2, params), parseRunner(app1, params));
+				Expression right = parseRunner(app2, params);
+				Expression left = parseRunner(app1, params);
+				return new Application(left, right);
 
 			}
 			else {
 				ArrayList<String> app1 = new ArrayList<>(tokens.subList(0, tokens.size()-1));
 				System.out.println("app1= " + app1);
 				ArrayList<String> app2 = new ArrayList<>(tokens.subList(tokens.size()-1, tokens.size()));
-				System.out.println("app2= " + app2);	
-				return new Application(parseRunner(app2, params), parseRunner(app1, params));
+				System.out.println("app2= " + app2);
+				Expression right = parseRunner(app2, params);
+				Expression left = parseRunner(app1, params);
+				return new Application(left, right);
 
 			}
 		}

@@ -1,3 +1,4 @@
+// had some help from Galadriel with some of the redex/replace structures
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -29,7 +30,11 @@ public class Console {
 			try {
 				Expression exp = parser.parse(tokens);
 				if (parser.isRun) {
-					runNextRedex(exp);
+					Expression newExp = nextRedex(exp);
+					while (!(exp.equals(newExp))) {
+						exp = newExp;
+						newExp = nextRedex(exp);
+					}
 				}
 				output = exp.toString();
 			} catch (Exception e) {
@@ -71,28 +76,115 @@ public class Console {
 		return clean.replaceAll("\\\\", "λ");
 	}
 	
-	public Expression runNextRedex(Expression e) {
+	// CHANGE CHANGE CHANGE
+	public static Expression nextRedex(Expression e) {
+		System.out.println("nextRedex");
 		if (e instanceof Application) {
 			Application a = ((Application) e);
 			if (a.left instanceof Function) {
-				e = replace(a.left, a.right);
+				System.out.println("REDEX CONFIRMED");
+				Function f = (Function)(a.left);
+			
+				e = replace(f.expression, a.right, f.variable);	
+			}
+			else {
+				Expression left = nextRedex(a.left);
+				if (!((a.left).toString()).equals(left.toString())) {
+					return new Application(left, a.right);
+				} else {
+					Expression right = nextRedex(a.right);
+					if (!((a.right).toString()).equals(right.toString())) {
+						return new Application(a.left, right);
+					}
+				}
+			}
+		}
+		else if (e instanceof Function) {
+			Function f = (Function)e;
+			Expression exp = nextRedex(f.expression);
+			if (!((((Function)e).expression).toString()).equals(exp.toString())) {
+				return new Function(f.variable, exp);
 			}
 		}
 		return e;
 	}
 	
-	public Expression replace(Expression left, Expression right) {
-		Function funcLeft = ((Function) left);
-		String newExp = "";
-		
-		for (int i = 0; i < funcLeft.variable.getList().size(); i++) {
-			for (int j = 0; j < funcLeft.expression.toString().length(); j++) {
-				if (funcLeft.expression.toString().substring(j, j+1) == funcLeft.variable.getList().get(i).name) {
-					
-				}
+	public static Expression reduce(Expression e, Variable v) {
+		if (e instanceof Variable) {
+			Variable newE = ((Variable) e);
+			if (newE.name.equals(v.name)&& (newE instanceof BoundVar)) {
+				BoundVar bv = ((BoundVar) newE);
+				bv.setName(newE.name+"1");
+				return bv;
+			}
+			return e;
+		}
+		else if (e instanceof Application) {
+			Application a = ((Application) e);
+			return new Application (reduce(a.left, v), reduce(a.right,v));
+
+		}
+		else if (e instanceof Function) {
+			Function f = ((Function) e);
+			if (f.variable.name.equals(v.name)) {
+				f.variable.setName(f.variable.name+"1");
+				BoundVar bv = new BoundVar(v.name+"1");
+				return new Function(f.variable, replace(f, bv, v));
+			}
+			return e;
+			
+		}
+		return e;
+	}
+	
+	public static Expression replace(Expression exp, Expression right, Variable param) {
+		System.out.println("REPLACE IS RUNNING");
+		if (exp instanceof Function) {
+			System.out.println("function");
+			Function funcLeft = ((Function) exp);
+			System.out.println(param.name);
+			System.out.println(funcLeft.expression);
+			if (param.name.equals(funcLeft.expression)) {
+				System.out.println(right);
+				return funcLeft.expression;
+			}
+			System.out.println("replace func");
+			return new Function(funcLeft.variable, replace(funcLeft.expression, right, param));
+			
+		}
+		else if (exp instanceof Application) {
+			System.out.println("application");
+			Application app = ((Application) exp);
+			return new Application(replace(app.left, right, param), replace(app.right, right, param));
+		}
+		else if (exp instanceof Variable) {
+			System.out.println("variable");
+			Variable var = ((Variable) exp);
+			if (param.name.equals(var.name)) {
+				System.out.println(right);
+				return right;
+			}
+			else {
+				System.out.println("HIHIHIHIHIHI");
+				return exp;
 			}
 		}
+		return null;
 	}
+
+
+//		String newExp = "";
+//		
+//		for (int j = 0; j < funcLeft.expression.toString().length(); j++) {
+//			for (int i = 0; i < funcLeft.variable.getList().size(); i++) {
+//				if (funcLeft.expression.toString().substring(j, j+1).equals(funcLeft.variable.getList().get(i).name)) {
+//					newExp += freeVar; 
+//				}
+//				newExp += funcLeft.expression.toString().substring(j, j+1);
+//			}
+//			
+//		}
+		
 	
 	public static String removeWeirdWhitespace(String input) {
 		String whitespace_chars =  ""       /* dummy empty string for homogeneity */

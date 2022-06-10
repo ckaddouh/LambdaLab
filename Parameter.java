@@ -16,6 +16,10 @@ public class Parameter extends Variable{
         list.add(var);
     }
     
+    public void setName(String in){
+		name = in;    
+    }
+    
     public ArrayList<BoundVar> getList(){
     	return list;
     }
