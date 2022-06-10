@@ -14,7 +14,7 @@ public class Variable implements Expression {
 	@Override
 	public String toString() {
 		if (expression != null){
-			return "Added " + name + " as " + expression.toString();
+			return "Added " + expression.toString() + " as " + name;
 		}
 		System.out.println("normal... " + name);
 		return name;

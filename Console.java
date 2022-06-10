@@ -30,21 +30,33 @@ public class Console {
 			try {
 				Expression exp = parser.parse(tokens);
 				if (parser.isRun) {
+					System.out.println("RUN STUFF WILL RUN");
 					Expression newExp = nextRedex(exp);
 					while (!(exp.equals(newExp))) {
 						exp = newExp;
 						newExp = nextRedex(exp);
 					}
+					output = exp.toString();
 				}
-				output = exp.toString();
+				if (parser.isVar) {
+					System.out.println("VAR STUFF");
+					Variable v = new Variable(tokens.get(0), exp);
+					parser.vars.add(v);
+					output = v.toString();
+				}
+				
 			} catch (Exception e) {
-				if (!input.equals("")){
+				if (parser.variableAlreadyDefined) {
+					System.out.println(e.getMessage());
+				}
+				else if (!input.equals("")){
 					System.out.println("Unparsable expression, input was: \"" + input + "\"");
 				}
 				input = cleanConsoleInput();
 				continue;
 			}
 			
+
 			System.out.println(output);
 			
 			input = cleanConsoleInput();

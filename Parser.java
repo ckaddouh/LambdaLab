@@ -6,8 +6,8 @@ public class Parser {
 
 	public ArrayList<Variable> vars = new ArrayList<>();
 	public boolean isRun = false;
-
-
+	public boolean variableAlreadyDefined = false;
+	public boolean isVar = false;
 
 	public Expression parse(ArrayList<String> tokens) throws Exception {
 		ArrayList<Parameter> paramVars = new ArrayList<>();
@@ -31,18 +31,26 @@ public class Parser {
 
 		
 		if (tokens.contains("=")){
+			isVar = true;
 			ArrayList<String> exp = new ArrayList<String>(tokens.subList(tokens.indexOf("=")+1, tokens.size()));
-			for (int i = 0; i < vars.size(); i++) {
-				if (vars.get(i).name.equals(tokens.get(0))) {
-					System.out.println(tokens.get(0) + " is already defined.");
-					return null;
-					// NEED TO RETURN NULL OR SOMETHING HERE INSTEAD, SOMETHING THAT WON'T BREAK IT
-
-				}
-			}
-			Variable v = new Variable(tokens.get(0), parseRunner(exp, params));
-			vars.add(v);
-			return v;
+			return parse(exp);
+//			for (int i = 0; i < vars.size(); i++) {
+//				if (vars.get(i).name.equals(tokens.get(0))) {
+////					System.out.println(tokens.get(0) + " is already defined.");
+//					variableAlreadyDefined = true;
+//					throw new Exception(tokens.get(0) + " is already defined.");
+//					// NEED TO RETURN NULL OR SOMETHING HERE INSTEAD, SOMETHING THAT WON'T BREAK IT
+//
+//				}
+//			}
+//			Expression p = parse(exp);
+//			System.out.println("HELLO");
+//			System.out.println(exp);
+//			System.out.println(p);
+//			System.out.println(isRun);
+//			Variable v = new Variable(tokens.get(0), p);
+//			vars.add(v);
+//			return v;
 		} 
 		
 		if (tokens.size() == 1){
@@ -64,6 +72,7 @@ public class Parser {
 		}
 		
 		if (tokens.get(0).equals("run")) {	
+			System.out.println("IS RUN");
 			isRun = true;
 			Expression p = parseRunner(new ArrayList<String>(tokens.subList(1,  tokens.size())), params);
 			if (p instanceof Variable) 
