@@ -24,7 +24,6 @@ public class Lexer {
 
 		int i = 0;
 		while (i < input.length()) {
-			//System.out.println(input);
 		    if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
 				arr.add(input.substring(0,i));
 				arr.add(input.substring(i,i+1));
@@ -53,11 +52,8 @@ public class Lexer {
 			
 
 	
-		System.out.println(arr);
 		for (int y = 1; y < arr.size(); y++) {
-			System.out.print(arr.get(y));
 			if (arr.get(y).equals("λ")) {
-				System.out.print("lambd");
 				if (!arr.get(y-1).equals("(")) {
 					arr.add(y, "(");
 					int x = y+1;
@@ -78,8 +74,8 @@ public class Lexer {
 
 		}
 
-		System.out.println(arr);
-		System.out.println("PAREN THING DONE");
+		// System.out.println(arr);
+		// System.out.println("PAREN THING DONE");
 
 
 		return arr;

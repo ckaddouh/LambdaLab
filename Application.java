@@ -9,6 +9,14 @@ public class Application implements Expression {
         
 	}
 
+    public Expression getLeft(){
+        return left;
+    }
+
+    public Expression getRight(){
+        return right;
+    }
+
     // public Application deepCopy(Application a) {
     //     Application newApp = new Application();
         

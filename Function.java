@@ -7,6 +7,14 @@ public class Function implements Expression {
 		this.expression = expression;
         this.variable = variable;
 	}
+
+    public Parameter getVariable(){
+        return variable;
+    }
+
+    public Expression getExpression(){
+        return expression;
+    }
     public String toString() {
         return "(λ" + variable + "." + expression + ")";
     }

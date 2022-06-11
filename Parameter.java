@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Parameter extends Variable{
-    ArrayList<BoundVar> list = new ArrayList<BoundVar>();
+    public ArrayList<BoundVar> list = new ArrayList<BoundVar>();
 
     public Parameter(String name){
         super(name);
@@ -26,7 +26,7 @@ public class Parameter extends Variable{
 
     @Override
 	public String toString() {
-        System.out.println("Parameter: " + name);
+
 		// return "Param Var!!: " + name;
         return name;
 	}

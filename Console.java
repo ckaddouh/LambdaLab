@@ -23,27 +23,45 @@ public class Console {
 
 
 			ArrayList<String> tokens = lexer.tokenize(input);
-			System.out.println(tokens);
 
 			String output = "";
 			
 			try {
 				Expression exp = parser.parse(tokens);
+
 				if (parser.isRun) {
-					System.out.println("RUN STUFF WILL RUN");
-					Expression newExp = nextRedex(exp);
+
+					Expression newExp = nextRedex(exp, parser);
 					while (!(exp.equals(newExp))) {
 						exp = newExp;
-						newExp = nextRedex(exp);
+						newExp = nextRedex(exp, parser);
 					}
 					output = exp.toString();
+
+
+					for (int i = 0; i<parser.vars.size(); i++){
+						if (parser.vars.get(i).getExpression().toString().equals(exp.toString())){
+							output = parser.vars.get(i).getName();
+						}
+					}
+					
 				}
+
+				if (!parser.isRun){
+					output = exp.toString();
+				}
+
+
+
 				if (parser.isVar) {
-					System.out.println("VAR STUFF");
 					Variable v = new Variable(tokens.get(0), exp);
 					parser.vars.add(v);
-					output = v.toString();
+					output = "Added " + v.getName() + " as " + v.getExpression().toString();
+					parser.isVar = false;
 				}
+
+
+				
 				
 			} catch (Exception e) {
 				if (parser.variableAlreadyDefined) {
@@ -55,7 +73,6 @@ public class Console {
 				input = cleanConsoleInput();
 				continue;
 			}
-			
 
 			System.out.println(output);
 			
@@ -89,114 +106,110 @@ public class Console {
 	}
 	
 	// CHANGE CHANGE CHANGE
-	public static Expression nextRedex(Expression e) {
-		System.out.println("nextRedex");
+	public static Expression nextRedex(Expression e, Parser p) {
+
 		if (e instanceof Application) {
 			Application a = ((Application) e);
-			if (a.left instanceof Function) {
-				System.out.println("REDEX CONFIRMED");
-				Function f = (Function)(a.left);
-			
-				e = replace(f.expression, a.right, f.variable);	
+			if (a.getLeft() instanceof Function) {
+
+				Function f = (Function)(a.getLeft());
+				for (int i = 0; i < p.freeVars.size(); i++){
+
+					e = reduce(e, p.freeVars.get(i));
+				}
+				e = replace(f.expression,  a.getRight(), f.variable);	
 			}
 			else {
-				Expression left = nextRedex(a.left);
-				if (!((a.left).toString()).equals(left.toString())) {
-					return new Application(left, a.right);
+				Expression left = nextRedex(a.getLeft(), p);
+				if (!((a.getLeft()).toString()).equals(left.toString())) {
+					return new Application(left, a.getRight());
 				} else {
-					Expression right = nextRedex(a.right);
-					if (!((a.right).toString()).equals(right.toString())) {
-						return new Application(a.left, right);
+					Expression right = nextRedex(a.getRight(),p);
+					if (!((a.getRight()).toString()).equals(right.toString())) {
+						return new Application(a.getLeft(), right);
 					}
 				}
 			}
 		}
 		else if (e instanceof Function) {
 			Function f = (Function)e;
-			Expression exp = nextRedex(f.expression);
+			Expression exp = nextRedex(f.expression, p);
 			if (!((((Function)e).expression).toString()).equals(exp.toString())) {
 				return new Function(f.variable, exp);
 			}
 		}
 		return e;
 	}
+
 	
 	public static Expression reduce(Expression e, Variable v) {
 		if (e instanceof Variable) {
-			Variable newE = ((Variable) e);
-			if (newE.name.equals(v.name)&& (newE instanceof BoundVar)) {
-				BoundVar bv = ((BoundVar) newE);
-				bv.setName(newE.name+"1");
-				return bv;
+			if (((Variable) e).name.equals(v.getName()) && ((Variable) e) instanceof BoundVar) {
+				return new BoundVar(v.getName() + "1");
 			}
 			return e;
 		}
-		else if (e instanceof Application) {
-			Application a = ((Application) e);
-			return new Application (reduce(a.left, v), reduce(a.right,v));
 
-		}
 		else if (e instanceof Function) {
-			Function f = ((Function) e);
-			if (f.variable.name.equals(v.name)) {
-				f.variable.setName(f.variable.name+"1");
-				BoundVar bv = new BoundVar(v.name+"1");
-				return new Function(f.variable, replace(f, bv, v));
+			if (((Function) e).variable.name.equals(v.getName())) {
+				return new Function(new Parameter(v.getName() + "1"),
+						replace(((Function) e).expression, new BoundVar(v.getName() + "1"), v));
 			}
-			return e;
-			
-		}
+			return new Function(((Function) e).variable, reduce(((Function) e).expression, v));
+		} 
+
+		else if (e instanceof Application) {
+			return new Application(reduce(((Application) e).left, v), reduce(((Application) e).right, v));
+		} 
+		
+		
+
 		return e;
+
+	}
+
+	public static Expression replace(Expression e, Expression in, Variable var) {
+
+		if (e instanceof Application) {
+			Application a = (Application) e;
+			return new Application(replace(a.getLeft(), in, var), replace(a.getRight(), in, var));
+		} 
+
+		else if (e instanceof Function) {
+
+			Function f = (Function) e;
+
+			if ((f.getVariable().getName().equals(var.getName()))) {
+				return e;
+			} 
+
+			else if (in instanceof Variable && ((f.getVariable().getName().equals(((Variable) in).getName())))){
+				return new Function(new Parameter(f.getVariable().getName()+ "1"), replace(f.getExpression(), in, var));
+			} 
+			
+			else {
+				return new Function(f.getVariable(), replace(f.getExpression(), in, var));
+			}
+		} 
+		
+		else if (e instanceof Variable) {
+			Variable v = (Variable) e;
+			if (var.getName().equals(v.getName())) {
+				return in;
+			} 
+
+			else {
+				return e;
+			}
+		} 
+		
+		else {
+			return null;
+		}
+
 	}
 	
-	public static Expression replace(Expression exp, Expression right, Variable param) {
-		System.out.println("REPLACE IS RUNNING");
-		if (exp instanceof Function) {
-			System.out.println("function");
-			Function funcLeft = ((Function) exp);
-			System.out.println(param.name);
-			System.out.println(funcLeft.expression);
-			if (param.name.equals(funcLeft.expression)) {
-				System.out.println(right);
-				return funcLeft.expression;
-			}
-			System.out.println("replace func");
-			return new Function(funcLeft.variable, replace(funcLeft.expression, right, param));
-			
-		}
-		else if (exp instanceof Application) {
-			System.out.println("application");
-			Application app = ((Application) exp);
-			return new Application(replace(app.left, right, param), replace(app.right, right, param));
-		}
-		else if (exp instanceof Variable) {
-			System.out.println("variable");
-			Variable var = ((Variable) exp);
-			if (param.name.equals(var.name)) {
-				System.out.println(right);
-				return right;
-			}
-			else {
-				System.out.println("HIHIHIHIHIHI");
-				return exp;
-			}
-		}
-		return null;
-	}
-
-
-//		String newExp = "";
-//		
-//		for (int j = 0; j < funcLeft.expression.toString().length(); j++) {
-//			for (int i = 0; i < funcLeft.variable.getList().size(); i++) {
-//				if (funcLeft.expression.toString().substring(j, j+1).equals(funcLeft.variable.getList().get(i).name)) {
-//					newExp += freeVar; 
-//				}
-//				newExp += funcLeft.expression.toString().substring(j, j+1);
-//			}
-//			
-//		}
-		
+	
 	
 	public static String removeWeirdWhitespace(String input) {
 		String whitespace_chars =  ""       /* dummy empty string for homogeneity */

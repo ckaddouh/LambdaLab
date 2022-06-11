@@ -11,12 +11,20 @@ public class Variable implements Expression {
 		this.name = name;
 		this.expression = expression;
 	}
+
+	public String getName(){
+		return name;
+	}
+
+	public Expression getExpression(){
+		return expression;
+	}
 	@Override
 	public String toString() {
 		if (expression != null){
 			return "Added " + expression.toString() + " as " + name;
 		}
-		System.out.println("normal... " + name);
+
 		return name;
 	}
 

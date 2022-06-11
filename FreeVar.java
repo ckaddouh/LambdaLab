@@ -6,7 +6,7 @@ public class FreeVar extends Variable{
 
     @Override
 	public String toString() {
-        System.out.println("Free Var: " + name);
+
 		// return "Free Var!!: " + name;
         return name;
 	}
