@@ -1,3 +1,5 @@
+// Kaz Nam and Christina Kaddouh
+// Lambda Lab 2022
 
 public class Variable implements Expression {
 	public String name;
@@ -19,13 +21,13 @@ public class Variable implements Expression {
 	public Expression getExpression(){
 		return expression;
 	}
+	
 	@Override
 	public String toString() {
 		if (expression != null){
-			return "Added " + expression.toString() + " as " + name;
+			return "Added " + name + " as " + expression.toString();
 		}
 
 		return name;
 	}
-
 }

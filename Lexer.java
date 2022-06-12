@@ -1,3 +1,5 @@
+// Kaz Nam and Christina Kaddouh
+// Lambda Lab 2022
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ public class Lexer {
 		ArrayList<String> arr = new ArrayList<>();
 
 		int i = 0;
+		
 		while (i < input.length()) {
 		    if (Arrays.asList(vals).contains(input.substring(i,i+1))) {
 				arr.add(input.substring(0,i));
@@ -37,9 +40,9 @@ public class Lexer {
 			}
 			else {
 				i++;
-			}
-				
+			}		
 		}
+		
 		arr.add(input);
 
 		for (int in = 0; in < arr.size(); in++) {
@@ -48,9 +51,6 @@ public class Lexer {
 				arr.remove(in--);
 			}
 		}
-		
-			
-
 	
 		for (int y = 1; y < arr.size(); y++) {
 			if (arr.get(y).equals("λ")) {
@@ -71,48 +71,8 @@ public class Lexer {
 				}
 				y++;
 			}
-
 		}
 
-		// System.out.println(arr);
-		// System.out.println("PAREN THING DONE");
-
-
 		return arr;
-
-		// String[] words = input.split(" ");
-		// // String[] a = "hello.there".split(".");
-		// // System.out.println(a[0]);
-		// while (st.hasMoreTokens()) {
-		// 	String t = st.nextToken();
-
-		// 	boolean containsVal = false;
-
-		
-		// 	//if (t.contains(".") || t.contains("\\") || t.contains("(") || t.contains(")")) {
-		// 	for (int c = 0; c < vals.length; c++) {
-		// 		if (t.contains(vals[c])) {
-		// 			containsVal = true;
-		// 			System.out.println(vals[c]);
-		// 			String[] arr = t.split(vals[c]);
-		// 			System.out.println(arr.toString());
-		// 			for (int word = 0; word < arr.length; word++) {
-		// 				System.out.println(arr[word]);
-		// 			}
-		// 			tokens.add(arr[0]);
-		// 			tokens.add(vals[c]);
-		// 			if (arr.length > 1)
-		// 				tokens.add(arr[1]);
-		// 		}
-		// 	}
-		// 	if (!containsVal)
-		// 		tokens.add(t);
-		// }
-
-		// return tokens;
-		
-
 	}
-	
-
 }

@@ -1,3 +1,6 @@
+// Kaz Nam and Christina Kaddouh
+// Lambda Lab 2022
+
 // had some help from Galadriel with some of the redex/replace structures
 
 import java.util.ArrayList;
@@ -17,20 +20,31 @@ public class Console {
 		
 		String input = cleanConsoleInput();
 
-		
 		while (! input.equalsIgnoreCase("exit")) {
-			
-
-
 			ArrayList<String> tokens = lexer.tokenize(input);
-
 			String output = "";
 			
 			try {
+				
+// 				Attempt at populate
+//				if (tokens.get(0).equals("populate")) {
+//					int start = Integer.parseInt(tokens.get(1));
+//					int end = Integer.parseInt(tokens.get(2));
+//					
+//					ArrayList<String> zeroTokens = lexer.tokenize("0 = \\f.\\x.x");
+//					parser.parse(zeroTokens);
+//					
+//					for (int i = 1; i <= end; i++) {
+//						ArrayList<String> tokens2 = lexer.tokenize(i + " = succ " + (i-1));
+//						parser.parse(tokens2);
+//					}
+//					System.out.println("Populated numbers " + start + " to " + end);
+//
+//				}
+				
 				Expression exp = parser.parse(tokens);
 
 				if (parser.isRun) {
-
 					Expression newExp = nextRedex(exp, parser);
 					while (!(exp.equals(newExp))) {
 						exp = newExp;
@@ -38,38 +52,39 @@ public class Console {
 					}
 					output = exp.toString();
 
-
 					for (int i = 0; i<parser.vars.size(); i++){
 						if (parser.vars.get(i).getExpression().toString().equals(exp.toString())){
 							output = parser.vars.get(i).getName();
 						}
 					}
-					
 				}
 
 				if (!parser.isRun){
 					output = exp.toString();
 				}
 
-
-
 				if (parser.isVar) {
 					Variable v = new Variable(tokens.get(0), exp);
-					parser.vars.add(v);
-					output = "Added " + v.getName() + " as " + v.getExpression().toString();
+					
+					if (!parser.variableAlreadyDefined) {
+						parser.vars.add(v);
+						output = "Added " + v.getName() + " as " + v.getExpression().toString();
+					}
+					else {
+						System.out.println(v.getName() + " is already defined.");
+						output = "";
+						parser.variableAlreadyDefined = false;
+					}
+					
 					parser.isVar = false;
 				}
-
-
 				
 				
 			} catch (Exception e) {
-				if (parser.variableAlreadyDefined) {
-					System.out.println(e.getMessage());
-				}
-				else if (!input.equals("")){
+				if (!input.equals("")){
 					System.out.println("Unparsable expression, input was: \"" + input + "\"");
 				}
+				
 				input = cleanConsoleInput();
 				continue;
 			}
@@ -78,6 +93,7 @@ public class Console {
 			
 			input = cleanConsoleInput();
 		}
+		
 		System.out.println("Goodbye!");
 	}
 
@@ -114,7 +130,6 @@ public class Console {
 
 				Function f = (Function)(a.getLeft());
 				for (int i = 0; i < p.freeVars.size(); i++){
-
 					e = reduce(e, p.freeVars.get(i));
 				}
 				e = replace(f.expression,  a.getRight(), f.variable);	
@@ -143,6 +158,7 @@ public class Console {
 
 	
 	public static Expression reduce(Expression e, Variable v) {
+
 		if (e instanceof Variable) {
 			if (((Variable) e).name.equals(v.getName()) && ((Variable) e) instanceof BoundVar) {
 				return new BoundVar(v.getName() + "1");
@@ -167,6 +183,7 @@ public class Console {
 		return e;
 
 	}
+	
 
 	public static Expression replace(Expression e, Expression in, Variable var) {
 

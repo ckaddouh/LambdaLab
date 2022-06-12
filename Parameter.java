@@ -1,3 +1,6 @@
+// Kaz Nam and Christina Kaddouh
+// Lambda Lab 2022
+
 import java.util.ArrayList;
 
 public class Parameter extends Variable{
@@ -5,8 +8,8 @@ public class Parameter extends Variable{
 
     public Parameter(String name){
         super(name);
-
     }
+    
     public Parameter(String name, ArrayList<BoundVar> list){
         super(name);
         this.list = list;
@@ -26,8 +29,6 @@ public class Parameter extends Variable{
 
     @Override
 	public String toString() {
-
-		// return "Param Var!!: " + name;
         return name;
 	}
 }

@@ -1,3 +1,6 @@
+// Kaz Nam and Christina Kaddouh
+// Lambda Lab 2022
+
 public class FreeVar extends Variable{
     
     public FreeVar(String name){
@@ -6,8 +9,6 @@ public class FreeVar extends Variable{
 
     @Override
 	public String toString() {
-
-		// return "Free Var!!: " + name;
         return name;
 	}
 }

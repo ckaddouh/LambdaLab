@@ -1,3 +1,6 @@
+// Kaz Nam and Christina Kaddouh
+// Lambda Lab 2022
+
 public class BoundVar extends Variable{
 
     public BoundVar(String name){
@@ -10,7 +13,6 @@ public class BoundVar extends Variable{
     
     @Override
 	public String toString() {
-
         return name;
 	}
 
